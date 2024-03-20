@@ -1,3 +1,10 @@
+'''
+DOCSGTRING = Para documentar e informar previamente funcionalidades 
+Nome do Programa: Sabor Express
+Desenvolvido por: Diego Paraguai de Carvalho juntamente com Alura
+Data de Criacao: 2024-03-18
+Objetivo: Desenvolver a parte do back-end, para cadastrar, listar e atuaizar restaurantes
+'''
 import os
 
 # uma lista ligada respresentado por chave, separados por virgula
