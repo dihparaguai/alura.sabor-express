@@ -3,9 +3,9 @@ import os
 # uma lista ligada respresentado por chave, separados por virgula
 # um dicionario, com chave valor, separados por dois pontos
 # cada elemento da lista eh um dicionario com 3 informacoes cada
-restaurantes = [{'nome':'restaurante01', 'cagegoria' : 'categoria01', 'situacao' : 'ativo'},
-                {'nome':'restaurante02', 'cagegoria' : 'categoria02', 'situacao' : 'ativo'},
-                {'nome':'restaurante03', 'cagegoria' : 'categoria03', 'situacao' : 'inativo'},              
+restaurantes = [{'nome':'restaurante01', 'categoria':'categoria01', 'ativo':False},
+                {'nome':'restaurante02', 'categoria':'categoria02', 'ativo':True},
+                {'nome':'restaurante03', 'categoria':'categoria03', 'ativo':False},              
 ]
 
 def exibir_nome_programa():
@@ -27,7 +27,10 @@ def encerrar_aplicacao():
 
 def titulo_menu(titulo):
     os.system('cls')
-    print(f'{titulo}\n')
+    linha = '*' * (len(titulo) + 4)
+    print(linha)
+    print(f'{titulo}')
+    print(linha)
 
 def voltar_menu():
     input('\ndigite uma tecla para voltar ao menu principal\n')
@@ -43,27 +46,50 @@ def cadastrar_novo_restaurante():
     titulo_menu('cadastro de novos resutaures')
     nome_restaurante = input('digite o nome do restaurante que deseja cadastrar: ')
     categoria_restaurante = input(f'digite a categoria do restaurante {nome_restaurante}: ')
-
     # append serve para adiciona um item a lista
-    restaurantes.append(nome_restaurante)
+    # esta sendo adicionado um dicionario na lista
+    restaurantes.append({'nome' : nome_restaurante , 'categoria' : categoria_restaurante, 'situacao' : False})
     # interpolacao de string
-    print (f'\no restaurante \'{nome_restaurante}\' foi cadastrado com sucesso')
+    print(f'\no restaurante \'{nome_restaurante}\' foi cadastrado com sucesso')
     # ao terminar o cadastro, voltar para a tela inicial
     voltar_menu()
 
 def listar_todos_restaurantes():
     titulo_menu('listagem de todos os restaurantes cadastrados')
+    print(f'{'nome do restaurante'.ljust(23)} | {'categoria'.ljust(20)} | status')
     # para cada restaurante na lista de restaurantes, print
     for restaurante in restaurantes:
         nome_restaurante = restaurante['nome']
         categoria = restaurante['categoria']
-        situacao = restaurante['situacao']
-        print(f'- {nome_restaurante} | {categoria} | {situacao}')
+        # operador ternario diferenciado: se verdadeiro, condicao, se falso
+        ativo = 'ativado' if restaurante['ativo'] else 'desativo'
+        # o metodo ljust coloca espacos adicionais a direira, ate o valor determinado
+        print(f' - {nome_restaurante.ljust(20)} | {categoria.ljust(20)} | {ativo.ljust(20)}')
+    voltar_menu()
+
+def ativar_ou_desativar_restaurante():
+    titulo_menu('ativar / desativar restaurante')
+    nome_restaurante = input('digite o nome do restaurante que deseja ativar / desativar: ')
+    # antes de procurar o restaurante, ele ja eh marcado como nao encontrado
+    restaurante_encontrado = False
+    # percorre toda a lista de restaurantes
+    for restaurante in restaurantes:
+        if nome_restaurante == restaurante['nome']:
+            # caso encontrado, muda a chave para encontrado
+            restaurante_encontrado = True
+            # o restaurante encontrado recebe o mesmo valor que tinha antes, mas ao contrario
+            restaurante['ativo'] = not restaurante['ativo']
+            # operador ternario diferenciado: se verdadeiro, condicao, se falso
+            mensagem = f'o restaurante restaurante foi ativado com sucesso' if restaurante['ativo'] else f'o restaurante foi desativado com sucesso'
+            print(mensagem)
+    # caso o restaurante nao foi encontrado, ou seja, continua FALSE mas ao contrario, este IF interpreta como TRUE
+    if not restaurante_encontrado:
+        print('o restaurante digitado nao foi encontrado')
     voltar_menu()
 
 def exibir_opcoes():
     print('1. Cadastrar restaurante')
-    print('2. Listar restaurante')
+    print('2. Listar restaur_ante')
     print('3. Ativar restaurante')
     print('4. Sair')
     print('\n')
@@ -82,12 +108,12 @@ def escolher_opcao():
         elif opcao_escolhida == 2:
             listar_todos_restaurantes()
         elif opcao_escolhida == 3:
-            print('ativar resutaurante')
+            ativar_ou_desativar_restaurante()
         elif opcao_escolhida == 4:
             encerrar_aplicacao()
         else:
             opcao_invalida()
-    except:
+    except Exception as e:
         opcao_invalida()
 
 # metodo principal
